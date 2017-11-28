@@ -8,24 +8,26 @@ export class SwaggerService extends BaseService {
 
   private swagger = {};
   public static options = {
-    pathToDefinitions: [],
-    info: {
-      description: '',
-      version: '1.0.0',
-      title: 'Swagger',
-      termsOfService: '',
-      contact: {},
-      license: {
-        name: '',
-        url: ''
-      }
-    },
-    host: '',
-    basePath: '/',
-    schemes: ['http'],
-    paths: {},
-    securityDefinitions: {},
-    externalDocs: {}
+    paths: [],
+    swaggerDefinitions: {
+      info: {
+        description: '',
+        version: '1.0.0',
+        title: 'Swagger',
+        termsOfService: '',
+        contact: {},
+        license: {
+          name: '',
+          url: ''
+        }
+      },
+      host: '',
+      basePath: '/',
+      schemes: ['http'],
+      paths: {},
+      securityDefinitions: {},
+      externalDocs: {}
+    }
   };
 
   public findAllFiles(directory, ext) {
@@ -44,7 +46,7 @@ export class SwaggerService extends BaseService {
     const modulesName = Object.keys(application.config.modules);
     modulesName.push(application.getId());
 
-    let files = this.config.pathToDefinitions;
+    let files = this.config.paths;
 
     modulesName.forEach(moduleName => {
       const module = application.getModule(moduleName);
@@ -52,7 +54,7 @@ export class SwaggerService extends BaseService {
       files = files.concat(this.findAllFiles(path.join(module.getControllersDirPath()), module.config.controller.ext));
     });
 
-    this.swagger = swaggerJSDoc({swaggerDefinition: this.config, apis: files});
+    this.swagger = swaggerJSDoc({swaggerDefinition: this.config.swaggerDefinitions, apis: files});
   }
 
   public get() {
